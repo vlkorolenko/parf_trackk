@@ -47,7 +47,7 @@ async def check_availability():
             if available:
                 available_messages.append(f"🎉 Парфум *{product['name']}* знову *в наявності!* 💥\n{product['product_url']}")
             else:
-                sold_out_messages.append(f" Парфум *{product['name']}* не *в наявності!* \n{product['product_url']}")
+                print("----")
 
         except Exception as e:
             sold_out_messages.append(f"❌ Помилка перевірки *{product['name']}*: {e}")
