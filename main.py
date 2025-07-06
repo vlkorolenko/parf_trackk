@@ -8,8 +8,7 @@ import os
 # === Налаштування через змінні середовища ===
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = int(os.environ.get("CHAT_ID"))
-CHECK_INTERVAL = 60          # Перевірка кожні 2 хв
-STATUS_INTERVAL = 600         # Повідомлення про роботу кожні 10 хв (не використовується тут)
+CHECK_INTERVAL = 60  # Перевірка кожну 1 хвилину
 
 bot = Bot(token=BOT_TOKEN)
 app = Flask(__name__)
@@ -33,6 +32,7 @@ def home():
 
 async def check_availability():
     available_messages = []
+    sold_out_messages = []
 
     for product in PRODUCTS:
         try:
@@ -45,9 +45,11 @@ async def check_availability():
 
             if available:
                 available_messages.append(f"🎉 Парфум *{product['name']}* знову *в наявності!* 💥\n{product['product_url']}")
+            else:
+                sold_out_messages.append(f"⏳ Парфум *{product['name']}* наразі *sold out*.")
 
         except Exception as e:
-            print(f"❌ Помилка перевірки {product['name']}: {e}")
+            sold_out_messages.append(f"❌ Помилка перевірки *{product['name']}*: {e}")
 
     if available_messages:
         full_text = "\n\n".join(available_messages)
@@ -62,6 +64,16 @@ async def check_availability():
             except Exception as e:
                 print(f"❌ Помилка при надсиланні повідомлення №{i+1}: {e}")
                 break
+    else:
+        try:
+            full_message = "\n\n".join(sold_out_messages)
+            await bot.send_message(
+                chat_id=CHAT_ID,
+                text=full_message,
+                parse_mode=constants.ParseMode.MARKDOWN
+            )
+        except Exception as e:
+            print(f"❌ Помилка надсилання повідомлення в Telegram: {e}")
 
 async def main_loop():
     while True:
