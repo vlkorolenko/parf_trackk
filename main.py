@@ -8,7 +8,7 @@ import os
 # === Налаштування через змінні середовища ===
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = int(os.environ.get("CHAT_ID"))
-CHECK_INTERVAL = 120          # Перевірка кожні 2 хв
+CHECK_INTERVAL = 60          # Перевірка кожні 2 хв
 STATUS_INTERVAL = 600         # Повідомлення про роботу кожні 10 хв (не використовується тут)
 
 bot = Bot(token=BOT_TOKEN)
@@ -33,7 +33,6 @@ def home():
 
 async def check_availability():
     available_messages = []
-    sold_out_messages = []
 
     for product in PRODUCTS:
         try:
@@ -46,8 +45,6 @@ async def check_availability():
 
             if available:
                 available_messages.append(f"🎉 Парфум *{product['name']}* знову *в наявності!* 💥\n{product['product_url']}")
-            else:
-                sold_out_messages.append(f"⏳ Парфум *{product['name']}* наразі *sold out*.")
 
         except Exception as e:
             print(f"❌ Помилка перевірки {product['name']}: {e}")
