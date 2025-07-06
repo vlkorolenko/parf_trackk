@@ -8,7 +8,7 @@ import os
 # === Налаштування ===
 BOT_TOKEN = "7954440053:AAEQZqUMLlCM3XuIlGUpMkEmOM_od1uEBko"
 CHAT_ID = 724220659
-CHECK_INTERVAL = 120          # Перевірка кожні 2 хв
+CHECK_INTERVAL = 49          # Перевірка кожні 2 хв
 STATUS_INTERVAL = 600         # Повідомлення про роботу кожні 10 хв
 
 bot = Bot(token=BOT_TOKEN)
@@ -47,7 +47,7 @@ async def check_availability():
             if available:
                 available_messages.append(f"🎉 Парфум *{product['name']}* знову *в наявності!* 💥\n{product['product_url']}")
             else:
-                sold_out_messages.append(f"⏳ Парфум *{product['name']}* наразі *sold out*.")
+                print("sold out")
 
         except Exception as e:
             sold_out_messages.append(f"❌ Помилка перевірки *{product['name']}*: {e}")
